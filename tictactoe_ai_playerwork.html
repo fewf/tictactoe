@@ -134,13 +134,14 @@ function nextMove(player)
 
 function humanPlay() 
 {
-	$('.cell').bind('click.game_on', function() {
+	$('.cell').bind('click.game_on', function() 
+	{
 		if ($(this).hasClass('empty'))
 		{
 			var cell_id = $(this).attr('id')
 			var cell_num = cell_id.substr(-1)
 			var player = getActivePlayer()
-		    if (!player.controller)
+		   	 if (!player.controller)
 			{
 				updateBoards(cell_num,player)
 			}
