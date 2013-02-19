@@ -276,7 +276,7 @@ function checkWinner(checkBoard, player, announce)
 		} 
     }  
     if (announce && !$('.cell').hasClass('empty'))
-	{
+    {
 		$('.cell').unbind('click.game_on')
 		$('p#player').text("Cat's Game! Game Over.")
 		$('.cell').css("background-color", "#EEEEEE")
@@ -303,7 +303,7 @@ function checkTwo(checkBoard, cell, playerNum, oppNum)
 			{
 				compAdd += 10
 			} 
-	}
+		}
 	}
 	return compAdd
 }
@@ -313,7 +313,8 @@ $('#new').bind('click.start', function() {
 
 	var gameType = $('input[name=gameType]:checked', '#gameChooser').val()
 
-	switch (gameType) {
+	switch (gameType) 
+	{
 		case "1":
 			player1Controller = 0
 			player2Controller = 0
