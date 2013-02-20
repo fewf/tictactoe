@@ -67,11 +67,11 @@ div.cell p {
 <script type="text/javascript">
 // init some vars
 var gameOver = true
-var player1
-var player2
-var playBoard
-//array of winning combinations in 9-length array representing tictactoe board
-var winners = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
+  , player1
+  , player2
+  , playBoard
+    //array of winning combinations in 9-length array representing tictactoe board
+  , winners = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
 
 // custom def for Player objects
 function Player(number, mark, active, controller)
@@ -155,11 +155,10 @@ function computerPlay()
 {
 
     var player = getActivePlayer()
-    var opponent = getInactivePlayer()
-
-    // moveComp will be an array of the values the computer assigns to each move, represented by the index of moveComp... 
-    var moveComp = [0,0,0,0,0,0,0,0,0]
-    var move
+      , opponent = getInactivePlayer()
+        // moveComp will be an array of the values the computer assigns to each move, represented by the index of moveComp... 
+      , moveComp = [0,0,0,0,0,0,0,0,0]
+      , move
 
 
 
