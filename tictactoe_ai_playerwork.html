@@ -94,6 +94,7 @@ function getInactivePlayer()
 
 function switchPlayer(currentPlayer)
 {
+    if (gameOver) return false
     if (currentPlayer.number === 1)
     {
         player1.active = false
