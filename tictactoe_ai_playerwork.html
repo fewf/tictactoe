@@ -85,21 +85,11 @@ function Player(number, mark, active, controller)
 // should these next three be Player Object methods?
 function getActivePlayer()
 {
-    if (player1.active)
-    {
-        return player1
-    } else {
-        return player2
-    }
+    return player1.active ? player1 : player2
 }
 function getInactivePlayer()
 {
-    if (!player1.active)
-    {
-        return player1
-    } else {
-        return player2
-    }
+    return !player1.active ? player1 : player2
 }
 
 function switchPlayer(currentPlayer)
