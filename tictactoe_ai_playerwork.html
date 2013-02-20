@@ -110,7 +110,7 @@ function switchPlayer(currentPlayer)
 
 function nextMove(player)
 {   
-    if (!gameOver) return false
+    if (gameOver) return false
     return player.controller ? computerPlay() : humanPlay()
 }
 
