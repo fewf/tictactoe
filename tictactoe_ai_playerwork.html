@@ -279,7 +279,7 @@ function checkTwo(checkBoard, cell, playerNum, oppNum)
         if (win.indexOf(cell) > -1)
         {  
             if (( checkBoard[win[0]] === playerNum || checkBoard[win[1]] === playerNum || checkBoard[win[3]] === playerNum ) 
-            && !( checkBoard[win[0]] === oppNum    || checkBoard[win[1]] === oppNum    || checkBoard[win[2]] === oppNum )
+            && !( checkBoard[win[0]] === oppNum    || checkBoard[win[1]] === oppNum    || checkBoard[win[2]] === oppNum ))
             {
                 compAdd += 10
             } 
