@@ -3,41 +3,41 @@
 <head>
 <style type="text/css">
 div.cell {
-	float: left;
-	width: 100px;
-	height: 100px;
+    float: left;
+    width: 100px;
+    height: 100px;
 
-	
+    
 }
 div.cell p {
-	font-size: 30pt;
-	font-family: sans-serif;
-	margin: 30px;
-	vertical-align: middle;
+    font-size: 30pt;
+    font-family: sans-serif;
+    margin: 30px;
+    vertical-align: middle;
 }
 #cell0, #cell3, #cell6 {
-	clear: both;
-	border-right: 1px solid black;
+    clear: both;
+    border-right: 1px solid black;
 }
 #cell1, #cell4, #cell7 {
-	border-right: 1px solid black;
-	border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
 }
 #cell2, #cell5, #cell8 {
-	border-left: 1px solid black;
+    border-left: 1px solid black;
 }
 #cell0, #cell1, #cell2 {
-	border-bottom: 1px solid black;
+    border-bottom: 1px solid black;
 }
 #cell3, #cell4, #cell5 {
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 #cell6, #cell7, #cell8 {
-	border-top: 1px solid black;
+    border-top: 1px solid black;
 }
 .empty {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 </style>
@@ -45,311 +45,295 @@ div.cell p {
 </head>
 <body>
 <div id="outerbox">
-	<div class="cell empty" id="cell0"></div>   
-	<div class="cell empty" id="cell1"></div>
-	<div class="cell empty" id="cell2"></div>
-	<div class="cell empty" id="cell3"></div>
-	<div class="cell empty" id="cell4"></div>
-	<div class="cell empty" id="cell5"></div>
-	<div class="cell empty" id="cell6"></div>
-	<div class="cell empty" id="cell7"></div>
-	<div class="cell empty" id="cell8"></div> 
-	<p id="player"></p>
-	<input type="submit" value="Start New Game!" id="new" />
-	<form id="gameChooser">
-		<input type="radio" name="gameType" value="1" />Human vs Human<br />
-		<input type="radio" name="gameType" value="2" />Human vs Computer<br />
-		<input type="radio" name="gameType" value="3" />Computer vs Human<br />
-		<input type="radio" name="gameType" value="4" />Computer vs Computer<br />
-	</form>
+    <div class="cell empty" id="cell0"></div>   
+    <div class="cell empty" id="cell1"></div>
+    <div class="cell empty" id="cell2"></div>
+    <div class="cell empty" id="cell3"></div>
+    <div class="cell empty" id="cell4"></div>
+    <div class="cell empty" id="cell5"></div>
+    <div class="cell empty" id="cell6"></div>
+    <div class="cell empty" id="cell7"></div>
+    <div class="cell empty" id="cell8"></div> 
+    <p id="player"></p>
+    <input type="submit" value="Start New Game!" id="new" />
+    <form id="gameChooser">
+        <input type="radio" name="gameType" value="1" />Human vs Human<br />
+        <input type="radio" name="gameType" value="2" />Human vs Computer<br />
+        <input type="radio" name="gameType" value="3" />Computer vs Human<br />
+        <input type="radio" name="gameType" value="4" />Computer vs Computer<br />
+    </form>
 </div>
 
 <script type="text/javascript">
-// init some vars
-var gameOver = true
-var player1
-var player2
-var playBoard
-//array of winning combinations in 9-length array representing tictactoe board
-var winners = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
+!function(){
+    'use strict';
+    // init some vars
+    var gameOver = true
+      , player1
+      , player2
+      , playBoard
+        //array of winning combinations in 9-length array representing tictactoe board
+      , winners = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [6,4,2]]
 
-// custom def for Player objects
-function Player(number, mark, active, controller)
-{
-	this.number = number
-	this.mark = mark
-	this.active = active
-	this.controller = controller // 0 for human, 1 for computer
-}
-
-// should these next three be Player Object methods?
-function getActivePlayer()
-{
-	if (player1.active)
-	{
-		return player1
-	} else {
-		return player2
-	}
-}
-function getInactivePlayer()
-{
-	if (!player1.active)
-	{
-		return player1
-	} else {
-		return player2
-	}
-}
-
-function switchPlayer(currentPlayer)
-{
-	if (currentPlayer.number == 1)
-	{
-		player1.active = false
-		player2.active = true
-		$('p#player').text("Player " + player2.number)
-		nextMove(player2)
-	} else {
-		player1.active = true
-		player2.active = false
-		$('p#player').text("Player " + player1.number)
-		nextMove(player1)
-	} 
-}
-
-function nextMove(player)
-{	
-	 if (!gameOver)
-	{
-		if (player.controller)
-		{
-			computerPlay()
-		} else {
-			humanPlay()
-		}
-	}
-}
-
-
-function humanPlay() 
-{
-	$('.cell').bind('click.game_on', function() 
-	{
-		if ($(this).hasClass('empty'))
-		{
-			var cell_id = $(this).attr('id')
-			var cell_num = cell_id.substr(-1)
-			var player = getActivePlayer()
-		   	 if (!player.controller)
-			{
-				updateBoards(cell_num,player)
-			}
-		}
-	});
-}
-
-
-// This is the juicy bit. 
-function computerPlay() 
-{
-
-	var player = getActivePlayer()
-	var opponent = getInactivePlayer()
-
-	// moveComp will be an array of the values the computer assigns to each move, represented by the index of moveComp... 
-	var moveComp = [0,0,0,0,0,0,0,0,0]
-	var move
-
-
-
-	for (var i = 0; i < playBoard.length; i++) 
-	{
-		// testBoard copies the current playBoard
-		var testBoard = playBoard.slice(0)
-		if (testBoard[i]==0)
-		{
-			// See if the move will give computer the win
-			testBoard[i] = player.number
-			moveComp[i] += checkWinner(testBoard, player, false) ? 1000 : 0
-			// See if the move will give opponent the win
-			testBoard[i] = opponent.number
-			moveComp[i] += checkWinner(testBoard, opponent, false) ? 100 : 0
-			// Add in checkTwo analysis
-			moveComp[i] += checkTwo(playBoard,i,player.number, opponent.number)
-		} else {
-			// minimum value for filled cell
-			moveComp[i] = -1
-		}
-	}
-
-	console.log(moveComp)
-
-
-	// cornerTrap checks if the computer is in danger of being forked by a player taking opposing corners
-	// if cornerTrap is detected, move priority changes to the arms of the board
-	var cornerTrap = false
-	if (((playBoard[0] == opponent.number) && (playBoard[8] == opponent.number)) || ((playBoard[6] == opponent.number) && (playBoard[2] == opponent.number)))
-	{
-		cornerTrap = true
-	}
-
-	// this switch sets priority for moves returning with equal relative values. priority goes to the center, then corners
-	var largest = Math.max.apply(Math, moveComp)
-	if (!cornerTrap)
-	{
-		switch (largest) {
-			case moveComp[4]:
-				move = 4
-				break
-			case moveComp[0]:
-				move = 0
-				break
-			case moveComp[2]:
-				move = 2
-				break
-			case moveComp[6]:
-				move = 6
-				break
-			case moveComp[8]:
-				move = 8
-				break
-			default:
-				move = moveComp.indexOf(largest)
-				break
-		}
-	} else {
-		// cornerTrap switches the priority to arms
-		switch (largest) {
-			case moveComp[1]:
-				move = 1
-				break
-			case moveComp[3]:
-				move = 3
-				break
-			case moveComp[5]:
-				move = 5
-				break
-			case moveComp[7]:
-				move = 7
-				break
-			default:
-				move = moveComp.indexOf(largest)
-				break
-		}
-	}
-
-	updateBoards(move, player)
-}
-
-function updateBoards(cell_number, player)
-{
-
-	$("#cell"+cell_number).html("<p>" + player.mark + "</p>").removeClass('empty')
-
-	playBoard[cell_number] = player.number
-
-	console.log("Player " + player.number + " takes cell " + cell_number)
-
-	checkWinner(playBoard, player, true)
-
-	switchPlayer(player)
-}
-
-function checkWinner(checkBoard, player, announce) 
-{
-	// announce means the actual board is being analyzed, with the possibility of the game ending
-	var pNumber = player.number
-
-	for (var i = 0; i < winners.length; i++) {
-		var check = winners[i]
-		if ((checkBoard[check[0]] == pNumber) && (checkBoard[check[1]] == pNumber) && (checkBoard[check[2]] == pNumber))
-		{
-			if (announce)
-			{
-				$('.cell').unbind('click.game_on')
-				$('p#player').text("Player "+ pNumber +" Wins!")	
-				$('#cell' + (check[0]) + ', #cell' + (check[1]) +', #cell' + (check[2])).css("background-color", "#FDFFBD")
-				gameOver = true
-			} else {
-				return true
-			}
-		} 
-    }  
-    if (announce && !$('.cell').hasClass('empty'))
+    // custom def for Player objects
+    function Player(number, mark, active, controller)
     {
-		$('.cell').unbind('click.game_on')
-		$('p#player').text("Cat's Game! Game Over.")
-		$('.cell').css("background-color", "#EEEEEE")
-		gameOver = true
+        this.number = number
+        this.mark = mark
+        this.active = active
+        this.controller = controller // 0 for human, 1 for computer
     }
 
-    return false
-}
+    // should these next three be Player Object methods?
+    function getActivePlayer()
+    {
+        return player1.active ? player1 : player2
+    }
+    function getInactivePlayer()
+    {
+        return !player1.active ? player1 : player2
+    }
 
-//checkTwo() gives 10 pts to the relative value of a possible move for each partial line that that move will be creating
-function checkTwo(checkBoard, cell, playerNum, oppNum)
-{
-	var compAdd = 0
-	for (var i = 0; i < winners.length; i++) 
-	{
-		var win = winners[i]
-		//ridiculously long if statement to check if
-		// 1) the win line being looked at contains the cell we're currently looking at AND
-		// 2) this line has the players number in it AND
-		// 3) this line has not an opponents number in it
-		if (win.indexOf(cell) > -1)
-		{  
-			if (((checkBoard[win[0]] == playerNum) || (checkBoard[win[1]] == playerNum) || (checkBoard[win[3]] == playerNum)) && !((checkBoard[win[0]] || checkBoard[win[1]] || checkBoard[win[2]]) == oppNum))
-			{
-				compAdd += 10
-			} 
-		}
-	}
-	return compAdd
-}
+    function switchPlayer(currentPlayer)
+    {
+        if (gameOver) return false
+        if (currentPlayer.number === 1)
+        {
+            player1.active = false
+            player2.active = true
+            $('p#player').text("Player " + player2.number)
+            nextMove(player2)
+        } else {
+            player1.active = true
+            player2.active = false
+            $('p#player').text("Player " + player1.number)
+            nextMove(player1)
+        } 
+    }
+
+    function nextMove(player)
+    {   
+        if (gameOver) return false
+        return player.controller ? computerPlay() : humanPlay()
+    }
 
 
-$('#new').bind('click.start', function() {
+    function humanPlay() 
+    {
+        $('.cell').bind('click.game_on', function() 
+        {
+            if ($(this).hasClass('empty'))
+            {
+                var cell_id = $(this).attr('id')
+                  , cell_num = cell_id.substr(-1)
+                  , player = getActivePlayer()
+                 if (!player.controller)
+                    updateBoards(cell_num,player)
+            }
+        });
+    }
 
-	var gameType = $('input[name=gameType]:checked', '#gameChooser').val()
 
-	switch (gameType) 
-	{
-		case "1":
-			player1Controller = 0
-			player2Controller = 0
-			break
-		case "2":
-			player1Controller = 0
-			player2Controller = 1
-			break
-		case "3":
-			player1Controller = 1
-			player2Controller = 0
-			break
-		case "4":
-			player1Controller = 1
-			player2Controller = 1
-			break
-		default:
-			player1Controller = 0
-			player2Controller = 1
-			break
-	}
+    // This is the juicy bit. 
+    function computerPlay() 
+    {
 
-	player1 = new Player(1, "O", true, player1Controller)
-	player2 = new Player(2, "X", false, player2Controller)
-	gameOver = false
+        var player = getActivePlayer()
+          , opponent = getInactivePlayer()
+            // moveComp will be an array of the values the computer assigns to each move, represented by the index of moveComp... 
+          , moveComp = [0,0,0,0,0,0,0,0,0]
+          , move
 
-	$('p#player').text("Player " + player1.number)
-	$('.cell').text('').addClass('empty').css("background-color", "white")
-	playBoard = new Array(0,0,0,0,0,0,0,0,0)
-	$('p#player').text("Player 1 Begin!")
-	console.log("New Game!")
 
-	nextMove(player1)
-});
+
+        for (var i = 0; i < playBoard.length; i++) 
+        {
+            // testBoard copies the current playBoard
+            var testBoard = playBoard.slice(0)
+            if (testBoard[i]===0)
+            {
+                // See if the move will give computer the win
+                testBoard[i] = player.number
+                moveComp[i] += checkWinner(testBoard, player, false) ? 1000 : 0
+                // See if the move will give opponent the win
+                testBoard[i] = opponent.number
+                moveComp[i] += checkWinner(testBoard, opponent, false) ? 100 : 0
+                // Add in checkTwo analysis
+                moveComp[i] += checkTwo(playBoard,i,player.number, opponent.number)
+            } else {
+                // minimum value for filled cell
+                moveComp[i] = -1
+            }
+        }
+
+        console.log(moveComp)
+
+
+        // cornerTrap checks if the computer is in danger of being forked by a player taking opposing corners
+        // if cornerTrap is detected, move priority changes to the arms of the board
+        var cornerTrap = false
+        if (( playBoard[0] === opponent.number && playBoard[8] === opponent.number) 
+         || ( playBoard[6] === opponent.number && playBoard[2] === opponent.number ))
+        {
+            cornerTrap = true
+        }
+
+        // this switch sets priority for moves returning with equal relative values. priority goes to the center, then corners
+        var largest = Math.max.apply(Math, moveComp)
+        if (!cornerTrap)
+        {
+            switch (largest) {
+                case moveComp[4]:
+                    move = 4
+                    break
+                case moveComp[0]:
+                    move = 0
+                    break
+                case moveComp[2]:
+                    move = 2
+                    break
+                case moveComp[6]:
+                    move = 6
+                    break
+                case moveComp[8]:
+                    move = 8
+                    break
+                default:
+                    move = moveComp.indexOf(largest)
+                    break
+            }
+        } else {
+            // cornerTrap switches the priority to arms
+            switch (largest) {
+                case moveComp[1]:
+                    move = 1
+                    break
+                case moveComp[3]:
+                    move = 3
+                    break
+                case moveComp[5]:
+                    move = 5
+                    break
+                case moveComp[7]:
+                    move = 7
+                    break
+                default:
+                    move = moveComp.indexOf(largest)
+                    break
+            }
+        }
+
+        updateBoards(move, player)
+    }
+
+    function updateBoards(cell_number, player)
+    {
+
+        $("#cell"+cell_number).html("<p>" + player.mark + "</p>").removeClass('empty')
+
+        playBoard[cell_number] = player.number
+
+        console.log("Player " + player.number + " takes cell " + cell_number)
+
+        checkWinner(playBoard, player, true)
+
+        switchPlayer(player)
+    }
+
+    function checkWinner(checkBoard, player, announce) 
+    {
+        // announce means the actual board is being analyzed, with the possibility of the game ending
+        var pNumber = player.number
+
+        for (var i = 0; i < winners.length; i++) {
+            var check = winners[i]
+            if (checkBoard[check[0]] === pNumber && checkBoard[check[1]] === pNumber && checkBoard[check[2]] === pNumber)
+            {
+                if (!announce) return true
+                $('.cell').unbind('click.game_on')
+                $('p#player').text("Player "+ pNumber +" Wins!")    
+                $('#cell' + (check[0]) + ', #cell' + (check[1]) +', #cell' + (check[2])).css("background-color", "#FDFFBD")
+                gameOver = true
+            } 
+        }  
+        if (announce && !$('.cell').hasClass('empty'))
+        {
+            $('.cell').unbind('click.game_on')
+            $('p#player').text("Cat's Game! Game Over.")
+            $('.cell').css("background-color", "#EEEEEE")
+            gameOver = true
+        }
+
+        return false
+    }
+
+    //checkTwo() gives 10 pts to the relative value of a possible move for each partial line that that move will be creating
+    function checkTwo(checkBoard, cell, playerNum, oppNum)
+    {
+        var compAdd = 0
+        for (var i = 0; i < winners.length; i++) 
+        {
+            var win = winners[i]
+            //ridiculously long if statement to check if
+            // 1) the win line being looked at contains the cell we're currently looking at AND
+            // 2) this line has the players number in it AND
+            // 3) this line has not an opponents number in it
+            if (win.indexOf(cell) > -1)
+            {  
+                if (( checkBoard[win[0]] === playerNum || checkBoard[win[1]] === playerNum || checkBoard[win[3]] === playerNum ) 
+                && !( checkBoard[win[0]] === oppNum    || checkBoard[win[1]] === oppNum    || checkBoard[win[2]] === oppNum ))
+                {
+                    compAdd += 10
+                } 
+            }
+        }
+        return compAdd
+    }
+
+
+    $('#new').bind('click.start', function() {
+
+        var gameType = $('input[name=gameType]:checked', '#gameChooser').val()
+          , player1Controller
+          , player2Controller
+
+        switch (gameType) 
+        {
+            case "1":
+                player1Controller = 0
+                player2Controller = 0
+                break
+            case "2":
+                player1Controller = 0
+                player2Controller = 1
+                break
+            case "3":
+                player1Controller = 1
+                player2Controller = 0
+                break
+            case "4":
+                player1Controller = 1
+                player2Controller = 1
+                break
+            default:
+                player1Controller = 0
+                player2Controller = 1
+                break
+        }
+
+        player1 = new Player(1, "O", true, player1Controller)
+        player2 = new Player(2, "X", false, player2Controller)
+        gameOver = false
+
+        $('p#player').text("Player " + player1.number)
+        $('.cell').text('').addClass('empty').css("background-color", "white")
+        playBoard = new Array(0,0,0,0,0,0,0,0,0)
+        $('p#player').text("Player 1 Begin!")
+        console.log("New Game!")
+
+        nextMove(player1)
+    });
+}();
 
 //$('#new').trigger('click.start');
 </script>
