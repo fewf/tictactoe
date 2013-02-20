@@ -94,7 +94,7 @@ function getInactivePlayer()
 
 function switchPlayer(currentPlayer)
 {
-    if (currentPlayer.number == 1)
+    if (currentPlayer.number === 1)
     {
         player1.active = false
         player2.active = true
@@ -122,12 +122,10 @@ function humanPlay()
         if ($(this).hasClass('empty'))
         {
             var cell_id = $(this).attr('id')
-            var cell_num = cell_id.substr(-1)
-            var player = getActivePlayer()
+              , cell_num = cell_id.substr(-1)
+              , player = getActivePlayer()
              if (!player.controller)
-            {
                 updateBoards(cell_num,player)
-            }
         }
     });
 }
@@ -149,7 +147,7 @@ function computerPlay()
     {
         // testBoard copies the current playBoard
         var testBoard = playBoard.slice(0)
-        if (testBoard[i]==0)
+        if (testBoard[i]===0)
         {
             // See if the move will give computer the win
             testBoard[i] = player.number
@@ -171,7 +169,7 @@ function computerPlay()
     // cornerTrap checks if the computer is in danger of being forked by a player taking opposing corners
     // if cornerTrap is detected, move priority changes to the arms of the board
     var cornerTrap = false
-    if (((playBoard[0] == opponent.number) && (playBoard[8] == opponent.number)) || ((playBoard[6] == opponent.number) && (playBoard[2] == opponent.number)))
+    if (((playBoard[0] === opponent.number) && (playBoard[8] === opponent.number)) || ((playBoard[6] === opponent.number) && (playBoard[2] === opponent.number)))
     {
         cornerTrap = true
     }
@@ -245,7 +243,7 @@ function checkWinner(checkBoard, player, announce)
 
     for (var i = 0; i < winners.length; i++) {
         var check = winners[i]
-        if ((checkBoard[check[0]] == pNumber) && (checkBoard[check[1]] == pNumber) && (checkBoard[check[2]] == pNumber))
+        if ((checkBoard[check[0]] === pNumber) && (checkBoard[check[1]] === pNumber) && (checkBoard[check[2]] === pNumber))
         {
             if (announce)
             {
@@ -282,7 +280,7 @@ function checkTwo(checkBoard, cell, playerNum, oppNum)
         // 3) this line has not an opponents number in it
         if (win.indexOf(cell) > -1)
         {  
-            if (((checkBoard[win[0]] == playerNum) || (checkBoard[win[1]] == playerNum) || (checkBoard[win[3]] == playerNum)) && !((checkBoard[win[0]] || checkBoard[win[1]] || checkBoard[win[2]]) == oppNum))
+            if (((checkBoard[win[0]] === playerNum) || (checkBoard[win[1]] === playerNum) || (checkBoard[win[3]] === playerNum)) && !((checkBoard[win[0]] || checkBoard[win[1]] || checkBoard[win[2]]) === oppNum))
             {
                 compAdd += 10
             } 
