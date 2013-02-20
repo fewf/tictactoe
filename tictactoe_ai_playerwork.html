@@ -243,7 +243,7 @@ function checkWinner(checkBoard, player, announce)
 
     for (var i = 0; i < winners.length; i++) {
         var check = winners[i]
-        if ((checkBoard[check[0]] === pNumber) && (checkBoard[check[1]] === pNumber) && (checkBoard[check[2]] === pNumber))
+        if (checkBoard[check[0]] === pNumber && checkBoard[check[1]] === pNumber && checkBoard[check[2]] === pNumber)
         {
             if (announce)
             {
