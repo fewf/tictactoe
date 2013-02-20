@@ -245,15 +245,11 @@ function checkWinner(checkBoard, player, announce)
         var check = winners[i]
         if (checkBoard[check[0]] === pNumber && checkBoard[check[1]] === pNumber && checkBoard[check[2]] === pNumber)
         {
-            if (announce)
-            {
-                $('.cell').unbind('click.game_on')
-                $('p#player').text("Player "+ pNumber +" Wins!")    
-                $('#cell' + (check[0]) + ', #cell' + (check[1]) +', #cell' + (check[2])).css("background-color", "#FDFFBD")
-                gameOver = true
-            } else {
-                return true
-            }
+            if (!announce) return true
+            $('.cell').unbind('click.game_on')
+            $('p#player').text("Player "+ pNumber +" Wins!")    
+            $('#cell' + (check[0]) + ', #cell' + (check[1]) +', #cell' + (check[2])).css("background-color", "#FDFFBD")
+            gameOver = true
         } 
     }  
     if (announce && !$('.cell').hasClass('empty'))
