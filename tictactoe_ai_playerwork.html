@@ -170,7 +170,8 @@ function computerPlay()
     // cornerTrap checks if the computer is in danger of being forked by a player taking opposing corners
     // if cornerTrap is detected, move priority changes to the arms of the board
     var cornerTrap = false
-    if (((playBoard[0] === opponent.number) && (playBoard[8] === opponent.number)) || ((playBoard[6] === opponent.number) && (playBoard[2] === opponent.number)))
+    if (( playBoard[0] === opponent.number && playBoard[8] === opponent.number) 
+     || ( playBoard[6] === opponent.number && playBoard[2] === opponent.number ))
     {
         cornerTrap = true
     }
@@ -277,7 +278,8 @@ function checkTwo(checkBoard, cell, playerNum, oppNum)
         // 3) this line has not an opponents number in it
         if (win.indexOf(cell) > -1)
         {  
-            if (((checkBoard[win[0]] === playerNum) || (checkBoard[win[1]] === playerNum) || (checkBoard[win[3]] === playerNum)) && !((checkBoard[win[0]] || checkBoard[win[1]] || checkBoard[win[2]]) === oppNum))
+            if (( checkBoard[win[0]] === playerNum || checkBoard[win[1]] === playerNum || checkBoard[win[3]] === playerNum ) 
+            && !( checkBoard[win[0]] === oppNum    || checkBoard[win[1]] === oppNum    || checkBoard[win[2]] === oppNum )
             {
                 compAdd += 10
             } 
